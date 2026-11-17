@@ -9,12 +9,18 @@ if (( $# == 0 )); then
 fi
 
 script=$1
+
+_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+[[ -r "$_ROOT/bin/palette.sh" ]] && . "$_ROOT/bin/palette.sh" && _hht_set_colors
+
+# truecolor: не зависит от темы терминала (kitty и др.).
+E=$'\033'; RST="${E}[0m"; BOLD="${E}[38;2;255;255;255m"; DIM="${E}[38;2;140;140;140m"
+
 if [[ ! -f $script ]]; then
-  printf '\033[2m  > target not found: %s\033[0m\n' "$script" >&2
+  printf '%s  > target not found: %s%s\n' "$DIM" "$script" "$RST" >&2
   exit 1
 fi
 
-E=$'\033'; RST="${E}[0m"; BOLD="${E}[1m"; DIM="${E}[2m"
 step=${STEP:-0.06}
 line() { printf '%s\n' "$*"; sleep "$step"; }
 

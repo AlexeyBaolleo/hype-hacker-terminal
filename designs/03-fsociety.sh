@@ -3,7 +3,7 @@
 # Тон: Mr. Robot + whoami. Медленно и зловеще: здесь важна пауза.
 set -u
 
-E=$'\033'; RST="${E}[0m"; BOLD="${E}[1m"; DIM="${E}[2m"
+E=$'\033'; RST="${E}[0m"; BOLD="${E}[38;2;255;255;255m"; DIM="${E}[38;2;140;140;140m"
 step=${STEP:-0.09}
 
 line() { printf '%s\n' "$*"; sleep "$step"; }

@@ -6,6 +6,7 @@
 set -u
 
 DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+[[ -r "$DIR/../bin/palette.sh" ]] && . "$DIR/../bin/palette.sh" && _hht_set_colors
 
 case ${1:-} in
   1|signal)    file=01-signal.sh ;;

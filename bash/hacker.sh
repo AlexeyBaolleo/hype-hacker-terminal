@@ -14,6 +14,14 @@ case ":$PATH:" in
 esac
 export PATH
 
+# Фиксируем ч/б палитру в самом терминале: чужая тема kitty не перебивает вид.
+# При выходе из оболочки исходные цвета возвращаются (kitty — через стек OSC).
+if [[ -r "$_bin/palette.sh" ]]; then
+  . "$_bin/palette.sh"
+  _hht_push_colors
+  trap '_hht_pop_colors' EXIT
+fi
+
 # Заставка. В конце жмётся любая клавиша, потом clear.
 if [[ -x "$_bin/hacker-boot" ]]; then
   bash "$_bin/hacker-boot"
@@ -23,9 +31,9 @@ fi
 # в остальных — приглушённый путь и тот же знак.
 __hacker_prompt() {
   if [[ $PWD == "$HOME" ]]; then
-    PS1='\$ '
+    PS1='\[\e[38;2;255;255;255m\]\$ \[\e[0m\]'
   else
-    PS1='\[\e[2m\]\w \[\e[0m\]\$ '
+    PS1='\[\e[38;2;140;140;140m\]\w \[\e[38;2;255;255;255m\]\$ \[\e[0m\]'
   fi
 }
 PROMPT_COMMAND=__hacker_prompt
