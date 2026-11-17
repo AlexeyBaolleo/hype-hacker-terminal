@@ -1,0 +1,139 @@
+#!/usr/bin/env bash
+# DESIGN 06 / COMPOSITE
+# Начало из 01 → hex-дамп из 04 с инверсным выделением → тесты из 01
+# → we are legion → ЛЮБАЯ КЛАВИША → clear → чистый промпт "$ ".
+set -u
+
+E=$'\033'; RST="${E}[0m"; BOLD="${E}[1m"; DIM="${E}[2m"; WHITE="${E}[97m"; INV="${E}[7m"
+step=${STEP:-0.013}
+
+line() { printf '%s\n' "$*"; sleep "$step"; }
+pass() {
+  printf '%s  > %-44s %s[%s]%s\n' "$DIM" "$1" "$BOLD" "${2:-PASS}" "$RST"
+  sleep "$step"
+}
+# Инверсное «выделение»: белый фон, чёрный текст, бегущее окно по строке.
+sweep() {
+  local text=$1 w=12 start
+  for ((start = 0; start < ${#text}; start += 4)); do
+    printf '\r%s%s%s%s%s%s' \
+      "$DIM" "${text:0:start}" "$WHITE$INV" "${text:start:w}" "$RST$DIM" "${text:start+w}"
+    sleep 0.006
+  done
+  printf '\r%s%s%s\n' "$DIM" "$text" "$RST"
+}
+clear_screen() { printf '%s[2J%s[H' "$E" "$E"; }
+
+# --- 01: начало ---------------------------------------------------------
+printf '%s────────────────────────────────────────────────────────────%s\n' "$DIM" "$RST"
+printf '%s  S I G N A L%s   %ssecure shell / build 2.4.1%s\n' "$BOLD" "$RST" "$DIM" "$RST"
+printf '%s────────────────────────────────────────────────────────────%s\n' "$DIM" "$RST"
+sleep 0.05
+line ""
+
+# --- 04: hex-дамп с анимацией выбора -----------------------------------
+hex=(
+  "0x7F3A  48 65 6C 6C 6F 20 57 6F 72 6C 64 00 01 0A 4D 45"
+  "0x7F4A  90 90 90 90 E8 1F 00 00 00 C3 55 48 89 E5 48 83"
+  "0x7F5A  EC 20 48 8D 05 7A 2C 00 00 48 89 C7 E8 62 FE FF"
+  "0x7F6A  FF 48 31 C0 48 31 DB 48 31 C9 48 31 D2 0F 05 C3"
+  "0x7F7A  2F 62 69 6E 2F 73 68 00 2D 63 00 67 68 6F 73 74"
+)
+for h in "${hex[@]}"; do sweep "$h"; done
+line ""
+
+# --- 01: тесты, экран убегает вниз -------------------------------------
+printf '%s  // MR. ROBOT / FSOCIETY%s\n' "$DIM" "$RST"; sleep "$step"
+pass "mounting /dev/fsociety" "OK"
+pass "E Corp gateway probe" "BYPASSED"
+pass "decrypting five/nine archive" "OK"
+pass "fsociety key exchange" "SIGNED"
+pass "impersonating Elliot" "OK"
+pass "Steel Mountain firewall" "DOWN"
+pass "whitecross subnet scan" "CLEAN"
+pass "reading Elliot's notes" "FOUND"
+pass "patching Evil Corp ledger" "DONE"
+pass "erasing Mr. Robot traces" "CLEAN"
+line ""
+
+printf '%s  // CYBERPUNK 2077 / NETRUNNER%s\n' "$DIM" "$RST"; sleep "$step"
+pass "relic protocol check" "STABLE"
+pass "netrunner deck: paraline" "ONLINE"
+pass "icebreaker synaptiq load" "OK"
+pass "uploading quickhack" "SHORT CIRCUIT"
+pass "Mikoshi construct ping" "ALIVE"
+pass "braindance buffer flush" "CLEAN"
+pass "Arasaka tower schematic" "ACQUIRED"
+pass "MaxTac scanner" "AVOIDED"
+pass "ripperdoc uplink" "OK"
+pass "Saburo data shard" "DECRYPTED"
+pass "V's neural link sync" "OK"
+line ""
+
+printf '%s  // WATCH DOGS / ctOS%s\n' "$DIM" "$RST"; sleep "$step"
+pass "ctOS handshake" "ACCEPTED"
+pass "profiling recursively" "DONE"
+pass "hacking public cameras" "42 FEEDS"
+pass "traffic light override" "READY"
+pass "DedSec node discovery" "7 NODES"
+pass "Aiden signature spoof" "OK"
+pass "Bloomberg terminal" "BREACHED"
+pass "ctOS 2.0 root key" "GUESSED"
+pass "bodycam stream" "HIJACKED"
+line ""
+
+printf '%s  // WHOAMI / MATRIX / HOLLYWOOD%s\n' "$DIM" "$RST"; sleep "$step"
+pass "whoami" "NOBODY"
+pass "following the white rabbit" "OK"
+pass "agent detection" "NONE"
+pass "red pill ingested" "OK"
+pass "swapping the floppy" "OK"
+pass "nuclear launch codes" "JUST KIDDING"
+pass "hacking the mainframe" "CLASSIC"
+pass "sudo make me a sandwich" "GRANTED"
+pass "compiling luck" "OK"
+pass "bribing the garbage collector" "DONE"
+pass "checking Hollywood script" "PLAUSIBLE"
+pass "disabling self-destruct" "OK"
+line ""
+
+printf '%s  // CORE SYSTEMS%s\n' "$DIM" "$RST"; sleep "$step"
+pass "loading kernel modules" "PASS"
+pass "mounting encrypted volume" "OK"
+pass "spoofing mac address" "OK"
+pass "bypassing perimeter firewall" "OK"
+pass "scanning open ports" "CLEAN"
+pass "rotating proxy chain" "7 HOPS"
+pass "shadowing process table" "HIDDEN"
+pass "allocating shellcode" "0x7F3A"
+pass "hooking libc calls" "OK"
+pass "masking PID 4444" "OK"
+pass "sniffing eth0" "QUIET"
+pass "spoofing DNS cache" "OK"
+pass "climbing trust chain" "ROOT"
+pass "reading /etc/shadow" "GRANTED"
+pass "erasing shell history" "CLEAN"
+pass "engaging ghost protocol" "ONLINE"
+line ""
+
+# --- 03: фраза ----------------------------------------------------------
+printf '%s  ' "$DIM"
+phrase="we are legion."
+for ((i = 0; i < ${#phrase}; i++)); do
+  printf '%s' "${phrase:i:1}"
+  sleep 0.045
+done
+printf '\n'
+line ""
+
+# --- ожидание любой клавиши, и только потом clear ----------------------
+printf '%s  press any key to continue _%s' "$DIM" "$RST"
+if [[ -t 0 ]]; then
+  read -r -n 1 -s _
+fi
+printf '\n'
+
+clear_screen
+if [[ ${PREVIEW:-0} == 1 ]]; then
+  printf '%s $ %s' "$BOLD" "$RST"
+fi

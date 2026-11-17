@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+# run — запустить свой Python-код с короткой «хакерской» анимацией.
+# Не трогает python / pip / uv / poetry: это отдельная команда, а не обёртка.
+set -u
+
+if (( $# == 0 )); then
+  printf 'usage: run script.py [args...]\n' >&2
+  exit 2
+fi
+
+script=$1
+if [[ ! -f $script ]]; then
+  printf '\033[2m  > target not found: %s\033[0m\n' "$script" >&2
+  exit 1
+fi
+
+E=$'\033'; RST="${E}[0m"; BOLD="${E}[1m"; DIM="${E}[2m"
+step=${STEP:-0.06}
+line() { printf '%s\n' "$*"; sleep "$step"; }
+
+gags=(
+  "asking the code nicely ................ yes"
+  "bribing garbage collector ............. done"
+  "consulting /dev/random ................ approved"
+  "checking if it works .................. it does"
+  "warming up the CPU .................... 51C"
+  "deploying to production ............... just kidding"
+  "reading documentation ................. skipped"
+  "negotiating with the kernel ........... fair terms"
+  "counting lines of code ................ 42"
+  "summoning stack overflow .............. answered"
+  "calibrating rubber duck ............... quacks"
+  "asking AI nicely ...................... refused"
+)
+
+declare -A used=()
+picked=()
+while (( ${#picked[@]} < 4 )); do
+  idx=$((RANDOM % ${#gags[@]}))
+  [[ -n ${used[$idx]:-} ]] && continue
+  used[$idx]=1
+  picked+=("${gags[$idx]}")
+done
+
+printf '%s  ▓▓ P A Y L O A D ▓▓%s\n' "$BOLD" "$RST"
+line ""
+for g in "${picked[@]}"; do
+  printf '%s  > %s%s\n' "$DIM" "$g" "$RST"
+  sleep "$step"
+done
+line ""
+printf '%s  > target ............................ %s%s\n' "$DIM" "$script" "$RST"; sleep "$step"
+printf '%s  > attaching interpreter ............. python3%s\n' "$DIM" "$RST"; sleep "$step"
+printf '%s  > mapping memory .................... 0x7f3a ready%s\n' "$DIM" "$RST"; sleep "$step"
+printf '%s  > injecting payload ................. 99%%%s\n' "$DIM" "$RST"; sleep 0.22
+printf '\r%s  > waiting for inspiration .......... ok%s\n' "$DIM" "$RST"; sleep 0.12
+printf '%s  > injecting payload ................. %s100%% OK%s\n' "$DIM" "$BOLD" "$RST"
+line ""
+
+printf '%s[2J%s[H' "$E" "$E"
+exec python3 "$script" "${@:2}"

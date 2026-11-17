@@ -1,0 +1,28 @@
+# Минималистичный терминал: чёрный фон, белый текст, без графики.
+[general]
+live_config_reload = true
+
+[window]
+startup_mode = "Fullscreen"
+padding = { x = 0, y = 0 }
+
+[scrolling]
+history = 2000
+
+[font]
+size = 13.0
+
+[font.normal]
+family = "MesloLGS Nerd Font Mono"
+style = "Regular"
+
+[cursor.style]
+shape = "Block"
+
+[colors.primary]
+background = "#000000"
+foreground = "#ffffff"
+
+[colors.cursor]
+text = "#000000"
+cursor = "#ffffff"
