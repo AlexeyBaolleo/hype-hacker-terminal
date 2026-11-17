@@ -1,7 +1,27 @@
-# Hacker terminal
+# hype-hacker-terminal
 
 Чёрно-белый fullscreen-терминал: быстрая заставка при открытии, чистый
 промпт `$` и отдельная анимация при запуске своего Python-кода.
+
+## Установка
+
+```bash
+./install.sh
+```
+
+Скрипт работает из любого каталога и сам вычисляет путь к репозиторию.
+Он делает три вещи:
+
+- ставит бит исполнимости на скрипты;
+- линкует `alacritty.toml` в `~/.config/alacritty/` (чужой конфиг бэкапится);
+- добавляет одну строку подключения в `~/.bashrc` (тоже с бэкапом).
+
+Повторный запуск безопасен: старые строки подключения удаляются, симлинк
+обновляется. Репозиторий можно клонировать и переименовывать — пути внутри
+скриптов считаются от их собственного расположения.
+
+После установки открой новый терминал. Старые окна alacritty нужно
+перезапустить.
 
 ## Состав
 
@@ -11,20 +31,8 @@ bash/hacker.sh     → подключается из ~/.bashrc
 bin/hacker-boot    → заставка (гибрид: 01 + 04 + 03)
 bin/run            → Python-раннер с анимацией
 designs/           → прототипы, из которых собирался финальный вид
+install.sh         → установка одной командой
 ```
-
-## Установка
-
-Из корня репозитория (`~/dotfiles`):
-
-```bash
-mkdir -p ~/.config/alacritty
-ln -sfn "$PWD/terminal/alacritty.toml" ~/.config/alacritty/alacritty.toml
-cp -a ~/.bashrc ~/.bashrc.bak.$(date +%s)
-printf '\n# hacker terminal\n. "$HOME/dotfiles/terminal/bash/hacker.sh"\n' >> ~/.bashrc
-```
-
-Открой новый терминал. Старые окна alacritty нужно перезапустить.
 
 ## Как это работает
 
@@ -41,6 +49,5 @@ printf '\n# hacker terminal\n. "$HOME/dotfiles/terminal/bash/hacker.sh"\n' >> ~/
 
 ## Откат
 
-Удали строку `. "$HOME/dotfiles/terminal/bash/hacker.sh"` из `~/.bashrc`
-(или восстанови `~/.bashrc.bak.*`) и симлинк
-`~/.config/alacritty/alacritty.toml`.
+Удали строку подключения `bash/hacker.sh` из `~/.bashrc` (или восстанови
+`~/.bashrc.bak.*`) и симлинк `~/.config/alacritty/alacritty.toml`.

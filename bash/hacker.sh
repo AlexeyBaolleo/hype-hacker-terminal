@@ -4,7 +4,10 @@ if [[ $- != *i* || ! -t 1 ]]; then
   return 0
 fi
 
-_bin="$HOME/dotfiles/terminal/bin"
+# Корень проекта вычисляется от расположения этого файла — репозиторий
+# можно клонировать и переименовывать без правки скриптов.
+_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+_bin="$_root/bin"
 case ":$PATH:" in
   *":$_bin:"*) ;;
   *) PATH="$_bin:$PATH" ;;
@@ -41,4 +44,4 @@ HISTSIZE=10000
 HISTFILESIZE=20000
 shopt -s histappend
 
-unset _bin
+unset _bin _root
